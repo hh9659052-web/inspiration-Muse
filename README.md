@@ -28,12 +28,21 @@ npm run dev
 
 打开 http://localhost:3000 。
 
+### Supabase 配置（M1 登录）
+
+1. 在 [supabase.com](https://supabase.com) 新建项目，把 `Project URL` 与 `anon key` 填入 `.env.local`。
+2. 在 **SQL Editor** 执行 `supabase/migrations/0001_init.sql` 建表。
+3. **Authentication → URL Configuration** 中，把 `Site URL` 设为本地/线上地址，并在 `Redirect URLs` 加入：
+   - `http://localhost:3000/auth/callback`
+   - `https://<你的域名>/auth/callback`
+4. 默认使用邮箱 Magic Link 登录，无需密码。
+
 ## 开发里程碑
 
 | 阶段 | 内容 | 状态 |
 |------|------|------|
 | M0 | 项目脚手架 | ✅ |
-| M1 | Supabase + 邮箱登录 | ⏳ |
+| M1 | Supabase + 邮箱登录 | ✅ |
 | M2 | 发布 & 展示泡泡 | ⏳ |
 | M3 | 72h 倒计时 + 冷却态 | ⏳ |
 | M4 | AI 分析 idea | ⏳ |
