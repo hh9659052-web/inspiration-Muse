@@ -8,6 +8,7 @@ import { CountdownTimer } from "@/components/bubble/countdown-timer";
 import { AiAnalysisPanel } from "@/components/analysis/ai-analysis-panel";
 import { MicroTaskList } from "@/components/analysis/micro-task-list";
 import { ActionBoard } from "@/components/analysis/action-board";
+import { RescueModeBanner } from "@/components/rescue/rescue-mode-banner";
 import type { Idea, IdeaAnalysis } from "@/types";
 
 export default async function BubbleDetailPage({
@@ -58,13 +59,13 @@ export default async function BubbleDetailPage({
         </div>
       </div>
 
+      <RescueModeBanner idea={idea} />
+
       <AiAnalysisPanel ideaId={idea.id} initial={analysis?.analysis ?? null} />
 
       <MicroTaskList ideaId={idea.id} initial={analysis?.micro_tasks ?? []} />
 
       <ActionBoard ideaId={idea.id} initial={analysis?.action_board ?? null} />
-
-      {/* M6：抢救模式 */}
     </div>
   );
 }
