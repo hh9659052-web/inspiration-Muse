@@ -48,7 +48,9 @@ npm run dev
 | M4 | AI 分析 idea | ✅ |
 | M5 | AI 小任务 + 落地看板 | ✅ |
 | M6 | 抢救模式 | ✅ |
-| M7 | 历史记录 + 体验打磨 | ⏳ |
+| M7 | 历史记录 + 体验打磨 | ✅ |
+
+功能与文件的详细对照见 [`DEVELOPMENT.md`](./DEVELOPMENT.md)。
 
 ## 目录约定
 
