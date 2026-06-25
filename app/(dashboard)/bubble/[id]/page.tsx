@@ -6,6 +6,8 @@ import { createClient } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/button";
 import { CountdownTimer } from "@/components/bubble/countdown-timer";
 import { AiAnalysisPanel } from "@/components/analysis/ai-analysis-panel";
+import { MicroTaskList } from "@/components/analysis/micro-task-list";
+import { ActionBoard } from "@/components/analysis/action-board";
 import type { Idea, IdeaAnalysis } from "@/types";
 
 export default async function BubbleDetailPage({
@@ -58,10 +60,11 @@ export default async function BubbleDetailPage({
 
       <AiAnalysisPanel ideaId={idea.id} initial={analysis?.analysis ?? null} />
 
-      {/* M5：小任务 + 看板；M6：抢救模式 */}
-      <div className="rounded-xl border border-dashed p-6 text-sm text-muted-foreground">
-        5 分钟小任务与落地看板将在 M5 加入这里。
-      </div>
+      <MicroTaskList ideaId={idea.id} initial={analysis?.micro_tasks ?? []} />
+
+      <ActionBoard ideaId={idea.id} initial={analysis?.action_board ?? null} />
+
+      {/* M6：抢救模式 */}
     </div>
   );
 }
