@@ -5,7 +5,8 @@ import { ArrowLeft } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/button";
 import { CountdownTimer } from "@/components/bubble/countdown-timer";
-import type { Idea } from "@/types";
+import { AiAnalysisPanel } from "@/components/analysis/ai-analysis-panel";
+import type { Idea, IdeaAnalysis } from "@/types";
 
 export default async function BubbleDetailPage({
   params,
@@ -23,6 +24,13 @@ export default async function BubbleDetailPage({
 
   if (!data) notFound();
   const idea = data as Idea;
+
+  const { data: analysisRow } = await supabase
+    .from("idea_analyses")
+    .select("*")
+    .eq("idea_id", id)
+    .maybeSingle();
+  const analysis = (analysisRow as IdeaAnalysis | null) ?? null;
 
   return (
     <div className="flex flex-col gap-6">
@@ -48,9 +56,11 @@ export default async function BubbleDetailPage({
         </div>
       </div>
 
-      {/* M4：AI 分析；M5：小任务 + 看板；M6：抢救模式 */}
+      <AiAnalysisPanel ideaId={idea.id} initial={analysis?.analysis ?? null} />
+
+      {/* M5：小任务 + 看板；M6：抢救模式 */}
       <div className="rounded-xl border border-dashed p-6 text-sm text-muted-foreground">
-        AI 分析、5 分钟小任务与落地看板将在后续里程碑（M4–M6）加入这里。
+        5 分钟小任务与落地看板将在 M5 加入这里。
       </div>
     </div>
   );
