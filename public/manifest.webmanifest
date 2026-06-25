@@ -1,0 +1,17 @@
+{
+  "name": "灵感缪斯",
+  "short_name": "灵感缪斯",
+  "description": "把一闪而过的想法推进成可执行的小行动。",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4f1eb",
+  "theme_color": "#eef4f6",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
