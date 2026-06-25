@@ -27,8 +27,8 @@ export function BubbleWall({ ideas }: { ideas: Idea[] }) {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {ideas.map((idea) => (
-            <BubbleCard key={idea.id} idea={idea} />
+          {ideas.map((idea, i) => (
+            <BubbleCard key={idea.id} idea={idea} index={i} />
           ))}
         </div>
       )}
