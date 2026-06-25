@@ -267,10 +267,39 @@ textarea:focus {
   line-height: 1.45;
 }
 
+.quota-meter {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px 10px;
+  align-items: center;
+  color: #62717b;
+  font-size: 12px;
+}
+
+.quota-meter strong {
+  color: #25313d;
+}
+
+.quota-meter div {
+  grid-column: 1 / -1;
+  height: 7px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(52, 86, 107, 0.12);
+}
+
+.quota-meter i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #34566b, #a67a4b);
+}
+
 .muse-stage {
   position: relative;
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto auto 1fr;
   min-height: 620px;
   overflow: hidden;
 }
@@ -289,6 +318,37 @@ textarea:focus {
   margin-top: 4px;
   color: #202933;
   font-size: 24px;
+}
+
+.today-strip {
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  padding: 0 18px 14px;
+}
+
+.today-strip div {
+  border: 1px solid rgba(67, 76, 86, 0.1);
+  border-radius: 8px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.58);
+}
+
+.today-strip strong,
+.today-strip span {
+  display: block;
+}
+
+.today-strip strong {
+  color: #25313d;
+  font-size: 20px;
+}
+
+.today-strip span {
+  margin-top: 3px;
+  color: #6f7d88;
+  font-size: 12px;
 }
 
 .visual-field {
@@ -812,6 +872,57 @@ textarea:focus {
   font-weight: 800;
 }
 
+.profile-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.profile-form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+}
+
+.profile-form input {
+  min-width: 0;
+  border: 1px solid rgba(74, 84, 96, 0.16);
+  border-radius: 8px;
+  padding: 9px 10px;
+  color: #24303d;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.profile-form button {
+  min-height: 36px;
+  border: 0;
+  border-radius: 8px;
+  padding: 0 10px;
+  color: #fff;
+  background: #34566b;
+}
+
+.profile-groups {
+  display: grid;
+  gap: 10px;
+}
+
+.profile-groups strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #25313d;
+  font-size: 13px;
+}
+
+.profile-groups button {
+  margin: 0 6px 6px 0;
+  border: 1px solid rgba(67, 76, 86, 0.1);
+  border-radius: 999px;
+  padding: 6px 10px;
+  color: #53616c;
+  background: rgba(255, 255, 255, 0.72);
+}
+
 @media (max-width: 1180px) {
   .workspace {
     grid-template-columns: 300px 1fr;
@@ -892,6 +1003,11 @@ textarea:focus {
   }
 
   .idea-table button {
+    grid-template-columns: 1fr;
+  }
+
+  .today-strip,
+  .profile-form {
     grid-template-columns: 1fr;
   }
 }

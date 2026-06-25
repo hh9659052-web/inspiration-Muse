@@ -1,8 +1,17 @@
 import React, { useEffect, useMemo, useState } from "react";
 
 const STORAGE_KEY = "inspiration-muse-v1";
+const PROFILE_KEY = "inspiration-muse-profile";
+const QUOTA_KEY = "inspiration-muse-quota";
 const WINDOW_MS = 72 * 60 * 60 * 1000;
+const DAILY_MUSE_LIMIT = 10;
 const now = Date.now();
+
+const defaultProfile = {
+  likes: ["短时间完成的小实验", "有视觉反馈的成长记录"],
+  dislikes: ["一上来就写完整商业计划", "没有反馈的长期打卡"],
+  neutrals: ["公开社交", "职业方向探索"],
+};
 
 const seedIdeas = [
   {
@@ -162,6 +171,30 @@ function loadIdeas() {
   }
 }
 
+function todayKey() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function loadProfile() {
+  try {
+    const raw = localStorage.getItem(PROFILE_KEY);
+    return raw ? JSON.parse(raw) : defaultProfile;
+  } catch {
+    return defaultProfile;
+  }
+}
+
+function loadQuota() {
+  try {
+    const raw = localStorage.getItem(QUOTA_KEY);
+    const parsed = raw ? JSON.parse(raw) : null;
+    if (parsed?.date === todayKey()) return parsed;
+  } catch {
+    // Fall through to a fresh daily quota.
+  }
+  return { date: todayKey(), used: 0 };
+}
+
 function normalizeImportedIdea(idea, index) {
   const tasks = Array.isArray(idea.tasks) ? idea.tasks : [];
   return {
@@ -184,9 +217,13 @@ function normalizeImportedIdea(idea, index) {
 
 function App() {
   const [ideas, setIdeas] = useState(loadIdeas);
+  const [profile, setProfile] = useState(loadProfile);
+  const [quota, setQuota] = useState(loadQuota);
   const [input, setInput] = useState("");
   const [noteInput, setNoteInput] = useState("");
   const [taskInput, setTaskInput] = useState("");
+  const [preferenceInput, setPreferenceInput] = useState("");
+  const [frictionInput, setFrictionInput] = useState("");
   const [visibility, setVisibility] = useState("公开");
   const [selectedId, setSelectedId] = useState(seedIdeas[0].id);
   const [filter, setFilter] = useState("all");
@@ -202,6 +239,14 @@ function App() {
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(ideas));
   }, [ideas]);
+
+  useEffect(() => {
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+  }, [profile]);
+
+  useEffect(() => {
+    localStorage.setItem(QUOTA_KEY, JSON.stringify(quota));
+  }, [quota]);
 
   useEffect(() => {
     const timer = window.setInterval(() => setTick((value) => value + 1), 60 * 1000);
@@ -244,11 +289,31 @@ function App() {
   const dueSoonCount = activeIdeas.filter(
     (idea) => idea.createdAt + WINDOW_MS - Date.now() <= 6 * 60 * 60 * 1000
   ).length;
+  const todayCreatedCount = enrichedIdeas.filter(
+    (idea) => Date.now() - idea.createdAt < 24 * 60 * 60 * 1000
+  ).length;
+  const connectionCount = enrichedIdeas.reduce(
+    (count, idea) => count + (idea.notes || []).filter((note) => note.includes("连接")).length,
+    0
+  );
+  const quotaRemaining = Math.max(DAILY_MUSE_LIMIT - quota.used, 0);
+
+  function spendMuseCredit() {
+    setQuota((current) => {
+      const fresh = current.date === todayKey() ? current : { date: todayKey(), used: 0 };
+      return { ...fresh, used: Math.min(fresh.used + 1, DAILY_MUSE_LIMIT) };
+    });
+  }
 
   function addIdea(event) {
     event.preventDefault();
     const text = input.trim();
     if (!text) return;
+    if (quotaRemaining <= 0) {
+      setImportStatus("今日 Muse 次数已用完，可继续手动记录，明天恢复 AI 拆解额度");
+      window.setTimeout(() => setImportStatus(""), 2200);
+      return;
+    }
 
     const responseForNewIdea = museResponse(text);
     const idea = {
@@ -271,6 +336,7 @@ function App() {
     setIdeas((current) => [idea, ...current]);
     setSelectedId(idea.id);
     setInput("");
+    spendMuseCredit();
   }
 
   function updateIdea(id, updater) {
@@ -342,6 +408,11 @@ function App() {
   }
 
   function rescueIdea(id) {
+    if (quotaRemaining <= 0) {
+      setImportStatus("今日 Muse 次数已用完，冷却救援明天恢复");
+      window.setTimeout(() => setImportStatus(""), 2200);
+      return;
+    }
     updateIdea(id, (idea) => ({
       ...idea,
       stage: "landed",
@@ -355,6 +426,35 @@ function App() {
       progress: 0,
     }));
     setSelectedId(id);
+    spendMuseCredit();
+  }
+
+  function addProfileItem(type, value) {
+    const clean = value.trim();
+    if (!clean) return;
+    setProfile((current) => ({
+      ...current,
+      [type]: Array.from(new Set([...(current[type] || []), clean])),
+    }));
+  }
+
+  function removeProfileItem(type, value) {
+    setProfile((current) => ({
+      ...current,
+      [type]: (current[type] || []).filter((item) => item !== value),
+    }));
+  }
+
+  function addPreference(event) {
+    event.preventDefault();
+    addProfileItem("likes", preferenceInput);
+    setPreferenceInput("");
+  }
+
+  function addFriction(event) {
+    event.preventDefault();
+    addProfileItem("dislikes", frictionInput);
+    setFrictionInput("");
   }
 
   function resetDemo() {
@@ -517,6 +617,15 @@ function App() {
                 ? `提醒已授权，${dueSoonCount} 个泡泡临近冷却。`
                 : "当前用本地提醒入口验证召回流程。")}
             </p>
+            <div className="quota-meter">
+              <span>Muse 今日额度</span>
+              <strong>
+                {quota.used}/{DAILY_MUSE_LIMIT}
+              </strong>
+              <div>
+                <i style={{ width: `${(quota.used / DAILY_MUSE_LIMIT) * 100}%` }} />
+              </div>
+            </div>
           </div>
         </aside>
 
@@ -529,6 +638,21 @@ function App() {
             <button className="quiet-action" type="button" onClick={resetDemo}>
               重置示例
             </button>
+          </div>
+
+          <div className="today-strip" aria-label="今日变化">
+            <div>
+              <strong>{todayCreatedCount}</strong>
+              <span>24小时内新泡泡</span>
+            </div>
+            <div>
+              <strong>{dueSoonCount}</strong>
+              <span>6小时内冷却</span>
+            </div>
+            <div>
+              <strong>{connectionCount}</strong>
+              <span>连接请求记录</span>
+            </div>
           </div>
 
           <div className="visual-field">
@@ -754,6 +878,47 @@ function App() {
                 <p>{item.action}</p>
               </article>
             ))}
+          </div>
+        </div>
+
+        <div className="surface-section profile-section">
+          <div className="section-heading">
+            <p className="eyebrow">偏好泡泡</p>
+            <h2>减少精神阻力</h2>
+          </div>
+          <form className="profile-form" onSubmit={addPreference}>
+            <input
+              value={preferenceInput}
+              onChange={(event) => setPreferenceInput(event.target.value)}
+              placeholder="添加让你有能量的人或事"
+            />
+            <button type="submit">加入喜欢</button>
+          </form>
+          <form className="profile-form" onSubmit={addFriction}>
+            <input
+              value={frictionInput}
+              onChange={(event) => setFrictionInput(event.target.value)}
+              placeholder="添加容易消耗你的阻力点"
+            />
+            <button type="submit">加入不喜欢</button>
+          </form>
+          <div className="profile-groups">
+            <div>
+              <strong>喜欢</strong>
+              {(profile.likes || []).map((item) => (
+                <button key={item} type="button" onClick={() => removeProfileItem("likes", item)}>
+                  {item}
+                </button>
+              ))}
+            </div>
+            <div>
+              <strong>不喜欢</strong>
+              {(profile.dislikes || []).map((item) => (
+                <button key={item} type="button" onClick={() => removeProfileItem("dislikes", item)}>
+                  {item}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
