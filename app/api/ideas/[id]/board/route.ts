@@ -1,7 +1,20 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { generateActionBoard, AI_MODEL } from "@/lib/ai/openai";
 import type { Idea } from "@/types";
+
+const boardSchema = z.object({
+  board: z.object({
+    columns: z.array(
+      z.object({
+        key: z.string(),
+        title: z.string(),
+        cards: z.array(z.string()),
+      })
+    ),
+  }),
+});
 
 /** POST /api/ideas/[id]/board — 生成简单落地看板并落库。 */
 export async function POST(
@@ -44,4 +57,31 @@ export async function POST(
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   return NextResponse.json({ board });
+}
+
+/** PATCH /api/ideas/[id]/board — 持久化拖拽后的看板状态。 */
+export async function PATCH(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "未登录" }, { status: 401 });
+
+  const parsed = boardSchema.safeParse(await request.json().catch(() => null));
+  if (!parsed.success) {
+    return NextResponse.json({ error: "参数错误" }, { status: 400 });
+  }
+
+  const { error } = await supabase
+    .from("idea_analyses")
+    .update({ action_board: parsed.data.board })
+    .eq("idea_id", id);
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  return NextResponse.json({ ok: true });
 }
