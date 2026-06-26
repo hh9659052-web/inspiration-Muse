@@ -12,3 +12,6 @@ export const WARM_THRESHOLD_MS = 24 * 60 * 60 * 1000; // >24h: warm
 
 /** AI 生成小任务的固定数量 */
 export const MICRO_TASK_COUNT = 3;
+
+/** 泡泡剩余多少小时内触发「即将冷却」邮件提醒 */
+export const REMINDER_BEFORE_HOURS = 6;

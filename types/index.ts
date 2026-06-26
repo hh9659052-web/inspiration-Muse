@@ -21,6 +21,7 @@ export interface Idea {
   status: IdeaStatus;
   expires_at: string; // ISO 时间戳
   rescue_count: number;
+  reminded_at: string | null; // 即将冷却提醒已发送时间
   created_at: string;
   updated_at: string;
 }

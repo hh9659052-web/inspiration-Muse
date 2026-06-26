@@ -43,6 +43,7 @@ export async function POST(
       expires_at: newExpiresAt,
       rescue_count: current.rescue_count + 1,
       status: "rescued",
+      reminded_at: null, // 续命后重置提醒，临近新一轮冷却时可再次提醒
     })
     .eq("id", id)
     .select("*")
