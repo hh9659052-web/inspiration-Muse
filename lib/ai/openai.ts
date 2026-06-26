@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
+import { requireEnv } from "@/lib/env";
 
 import {
   SYSTEM_PROMPT,
@@ -20,10 +21,7 @@ export const AI_MODEL = process.env.OPENAI_MODEL ?? "gpt-4o-mini";
 
 let _client: OpenAI | null = null;
 function client(): OpenAI {
-  if (!process.env.OPENAI_API_KEY) {
-    throw new Error("未配置 OPENAI_API_KEY");
-  }
-  _client ??= new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  _client ??= new OpenAI({ apiKey: requireEnv("OPENAI_API_KEY") });
   return _client;
 }
 
