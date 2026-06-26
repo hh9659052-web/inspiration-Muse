@@ -55,6 +55,7 @@ npm run dev
 4. `vercel.json` 已固定区域为 `hkg1`（香港），可按需调整。
 
 > 架构图见 [`ARCHITECTURE.md`](./ARCHITECTURE.md)。
+> 从零上线的逐步清单见 [`docs/go-live.md`](./docs/go-live.md)。
 
 ## 开发里程碑
 
