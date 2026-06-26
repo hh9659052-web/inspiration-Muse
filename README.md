@@ -37,6 +37,25 @@ npm run dev
    - `https://<你的域名>/auth/callback`
 4. 默认使用邮箱 Magic Link 登录，无需密码。
 
+## 部署到 Vercel
+
+1. 在 [vercel.com](https://vercel.com) 导入本仓库（自动识别为 Next.js）。
+2. 在 **Settings → Environment Variables** 配置：
+
+   | 变量 | 说明 |
+   |------|------|
+   | `NEXT_PUBLIC_SUPABASE_URL` | Supabase Project URL |
+   | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon key |
+   | `SUPABASE_SERVICE_ROLE_KEY` | service_role（仅服务端） |
+   | `OPENAI_API_KEY` | OpenAI 密钥 |
+   | `OPENAI_MODEL` | 可选，默认 `gpt-4o-mini` |
+   | `NEXT_PUBLIC_SITE_URL` | 线上域名，如 `https://muse.vercel.app` |
+
+3. 部署后，把线上域名的 `/auth/callback` 加进 Supabase 的 **Redirect URLs**。
+4. `vercel.json` 已固定区域为 `hkg1`（香港），可按需调整。
+
+> 架构图见 [`ARCHITECTURE.md`](./ARCHITECTURE.md)。
+
 ## 开发里程碑
 
 | 阶段 | 内容 | 状态 |
