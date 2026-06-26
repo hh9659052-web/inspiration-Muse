@@ -8,6 +8,7 @@ import { CountdownTimer } from "@/components/bubble/countdown-timer";
 import { AiAnalysisPanel } from "@/components/analysis/ai-analysis-panel";
 import { MicroTaskList } from "@/components/analysis/micro-task-list";
 import { ActionBoard } from "@/components/analysis/action-board";
+import { KickstartButton } from "@/components/analysis/kickstart-button";
 import { RescueModeBanner } from "@/components/rescue/rescue-mode-banner";
 import type { Idea, IdeaAnalysis } from "@/types";
 
@@ -35,6 +36,12 @@ export default async function BubbleDetailPage({
     .maybeSingle();
   const analysis = (analysisRow as IdeaAnalysis | null) ?? null;
 
+  // 三者皆空 → 显示一键启动
+  const isEmpty =
+    !analysis?.analysis &&
+    (analysis?.micro_tasks?.length ?? 0) === 0 &&
+    !analysis?.action_board;
+
   return (
     <div className="flex flex-col gap-6">
       <Button asChild variant="ghost" size="sm" className="w-fit">
@@ -60,6 +67,8 @@ export default async function BubbleDetailPage({
       </div>
 
       <RescueModeBanner idea={idea} />
+
+      {isEmpty && <KickstartButton ideaId={idea.id} />}
 
       <AiAnalysisPanel ideaId={idea.id} initial={analysis?.analysis ?? null} />
 

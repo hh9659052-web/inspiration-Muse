@@ -2,9 +2,16 @@ import { Sparkles } from "lucide-react";
 
 import { BubbleCard } from "@/components/bubble/bubble-card";
 import { CreateBubbleDialog } from "@/components/bubble/create-bubble-dialog";
+import { BubbleStatsBar, type BubbleStats } from "@/components/bubble/bubble-stats";
 import type { Idea } from "@/types";
 
-export function BubbleWall({ ideas }: { ideas: Idea[] }) {
+export function BubbleWall({
+  ideas,
+  stats,
+}: {
+  ideas: Idea[];
+  stats: BubbleStats;
+}) {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between gap-4">
@@ -16,6 +23,8 @@ export function BubbleWall({ ideas }: { ideas: Idea[] }) {
         </div>
         <CreateBubbleDialog />
       </div>
+
+      <BubbleStatsBar stats={stats} />
 
       {ideas.length === 0 ? (
         <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed py-20 text-center">

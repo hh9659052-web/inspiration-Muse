@@ -28,5 +28,18 @@ export default async function DashboardPage() {
     }
   }
 
-  return <BubbleWall ideas={ideas} />;
+  // 已落地数量（不在墙上展示，单独计数）
+  const { count: completedCount } = await supabase
+    .from("ideas")
+    .select("*", { count: "exact", head: true })
+    .eq("status", "completed");
+
+  const coldCount = ideas.filter((i) => isCold(i)).length;
+  const stats = {
+    active: ideas.length - coldCount,
+    cooling: coldCount,
+    completed: completedCount ?? 0,
+  };
+
+  return <BubbleWall ideas={ideas} stats={stats} />;
 }
