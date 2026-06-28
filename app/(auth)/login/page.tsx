@@ -31,26 +31,35 @@ function LoginForm() {
     if (!email) return;
 
     setLoading(true);
-    const supabase = createClient();
+    try {
+      const supabase = createClient();
 
-    const emailRedirectTo = `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(
-      redirect
-    )}`;
+      const emailRedirectTo = `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(
+        redirect
+      )}`;
 
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo },
-    });
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: { emailRedirectTo },
+      });
 
-    setLoading(false);
+      if (error) {
+        toast.error("发送失败", { description: error.message });
+        return;
+      }
 
-    if (error) {
-      toast.error("发送失败", { description: error.message });
-      return;
+      setSent(true);
+      toast.success("登录链接已发送", {
+        description: "请查收邮箱并点击链接登录。",
+      });
+    } catch (err) {
+      // 例如缺少 NEXT_PUBLIC_SUPABASE_URL/ANON_KEY 时会走到这里
+      toast.error("登录初始化失败", {
+        description: err instanceof Error ? err.message : "请检查环境变量配置",
+      });
+    } finally {
+      setLoading(false);
     }
-
-    setSent(true);
-    toast.success("登录链接已发送", { description: "请查收邮箱并点击链接登录。" });
   }
 
   return (
