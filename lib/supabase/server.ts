@@ -1,6 +1,5 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { cookies } from "next/headers";
-import { requireEnv } from "@/lib/env";
 
 /**
  * 服务端 Supabase 客户端（Server Components / Route Handlers / Server Actions）。
@@ -10,8 +9,8 @@ export async function createClient() {
   const cookieStore = await cookies();
 
   return createServerClient(
-    requireEnv("NEXT_PUBLIC_SUPABASE_URL"),
-    requireEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY"),
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
         getAll() {
