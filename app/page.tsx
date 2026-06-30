@@ -54,7 +54,7 @@ export default function CoverPage() {
           <img
             src="/images/cover-goddess.png"
             alt="灵感缪斯·女神"
-            className="h-full w-auto select-none object-contain drop-shadow-2xl"
+            className="h-full w-auto select-none object-contain mix-blend-multiply"
             draggable={false}
             onError={(e) => {
               e.currentTarget.style.visibility = "hidden";

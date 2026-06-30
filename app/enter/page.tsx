@@ -25,7 +25,7 @@ export default function EnterPage() {
           draggable={false}
           animate={{ y: [0, -10, 0] }}
           transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
-          className="h-[52vh] w-auto select-none object-contain drop-shadow-2xl"
+          className="h-[52vh] w-auto select-none object-contain mix-blend-multiply"
           onError={(e) => {
             e.currentTarget.style.visibility = "hidden";
           }}
