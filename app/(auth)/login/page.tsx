@@ -7,6 +7,7 @@ import { Sparkles, Mail, Loader2, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { createClient } from "@/lib/supabase/client";
+import { FloatingBubbles } from "@/components/visual/floating-bubbles";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -63,11 +64,11 @@ function LoginForm() {
   }
 
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="glass w-full max-w-sm border-0">
       <CardHeader className="items-center text-center">
         <Link href="/" className="mb-2 inline-flex items-center gap-2">
           <Sparkles className="size-5 text-primary" />
-          <span className="font-semibold">灵感缪斯</span>
+          <span className="font-display text-lg italic">灵感缪斯</span>
         </Link>
         <CardTitle className="text-xl">用邮箱登录</CardTitle>
         <CardDescription>
@@ -124,10 +125,13 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center px-6">
-      <Suspense fallback={<Loader2 className="size-6 animate-spin" />}>
-        <LoginForm />
-      </Suspense>
+    <main className="bg-dream relative flex min-h-screen items-center justify-center overflow-hidden px-6">
+      <FloatingBubbles density="sparse" />
+      <div className="relative z-10">
+        <Suspense fallback={<Loader2 className="size-6 animate-spin" />}>
+          <LoginForm />
+        </Suspense>
+      </div>
     </main>
   );
 }

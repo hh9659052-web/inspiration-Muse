@@ -3,9 +3,12 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 
+import { FloatingBubbles } from "@/components/visual/floating-bubbles";
+
 export default function EnterPage() {
   return (
-    <main className="bg-marble relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6">
+    <main className="bg-dream relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6">
+      <FloatingBubbles density="sparse" />
       {/* 柔光 */}
       <div
         aria-hidden

@@ -4,11 +4,13 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
+import { FloatingBubbles } from "@/components/visual/floating-bubbles";
+
 export default function CoverPage() {
   return (
-    <main className="bg-marble relative min-h-screen overflow-hidden">
+    <main className="bg-dream relative min-h-screen overflow-hidden">
       {/* 漂浮的水晶泡泡装饰 */}
-      <Bubbles />
+      <FloatingBubbles density="rich" />
 
       {/* 顶部编辑式导航 */}
       <header className="relative z-20 mx-auto flex max-w-7xl items-center justify-between px-6 py-6 sm:px-10">
@@ -86,33 +88,5 @@ export default function CoverPage() {
         </motion.div>
       </section>
     </main>
-  );
-}
-
-/** 漂浮的水晶泡泡（图四质感） */
-function Bubbles() {
-  const bubbles = [
-    { size: 120, left: "8%", top: "18%", delay: 0 },
-    { size: 72, left: "82%", top: "22%", delay: 1.2 },
-    { size: 160, left: "78%", top: "62%", delay: 0.6 },
-    { size: 56, left: "14%", top: "68%", delay: 1.8 },
-    { size: 90, left: "46%", top: "10%", delay: 2.4 },
-  ];
-  return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 z-0">
-      {bubbles.map((b, i) => (
-        <span
-          key={i}
-          className="bubble-crystal animate-float absolute rounded-full"
-          style={{
-            width: b.size,
-            height: b.size,
-            left: b.left,
-            top: b.top,
-            animationDelay: `${b.delay}s`,
-          }}
-        />
-      ))}
-    </div>
   );
 }
