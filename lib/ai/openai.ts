@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { zodTextFormat } from "openai/helpers/zod";
+import { z } from "zod";
 import { requireEnv } from "@/lib/env";
 
 import {
@@ -17,54 +17,67 @@ import {
   type ActionBoardOutput,
 } from "@/lib/ai/schemas";
 
-export const AI_MODEL = process.env.OPENAI_MODEL ?? "gpt-4o-mini";
+// 默认 deepseek-chat；用 OpenAI 时设为 gpt-4o-mini 等。
+export const AI_MODEL = process.env.OPENAI_MODEL ?? "deepseek-chat";
 
 let _client: OpenAI | null = null;
 function client(): OpenAI {
-  _client ??= new OpenAI({ apiKey: requireEnv("OPENAI_API_KEY") });
+  // OPENAI_BASE_URL 可指向任何兼容 OpenAI 接口的服务（DeepSeek / 其它国内兼容服务 / 中转），
+  // 用于绕开 OpenAI 官方对部分国家/地区的封禁。未设置时用官方默认地址。
+  _client ??= new OpenAI({
+    apiKey: requireEnv("OPENAI_API_KEY"),
+    baseURL: process.env.OPENAI_BASE_URL || undefined,
+  });
   return _client;
 }
 
-/** 通用：用 Responses API 跑一次结构化输出。 */
-async function parse<T>(
+/**
+ * 用 Chat Completions + JSON 模式跑一次结构化输出，并用 zod 校验。
+ * 兼容 OpenAI 与 DeepSeek 等 OpenAI-兼容服务（不依赖 Responses API）。
+ */
+async function parseJson<T>(
   userPrompt: string,
-  schema: Parameters<typeof zodTextFormat>[0],
-  name: string
+  schema: z.ZodType<T>
 ): Promise<T> {
-  const response = await client().responses.parse({
+  const res = await client().chat.completions.create({
     model: AI_MODEL,
-    input: [
+    messages: [
       { role: "system", content: SYSTEM_PROMPT },
       { role: "user", content: userPrompt },
     ],
-    text: { format: zodTextFormat(schema, name) },
+    response_format: { type: "json_object" },
+    temperature: 0.7,
   });
 
-  const parsed = response.output_parsed;
-  if (!parsed) throw new Error("AI 未返回有效结果");
-  return parsed as T;
+  const content = res.choices[0]?.message?.content;
+  if (!content) throw new Error("AI 未返回有效结果");
+
+  let data: unknown;
+  try {
+    data = JSON.parse(content);
+  } catch {
+    throw new Error("AI 返回的不是有效 JSON");
+  }
+  return schema.parse(data);
 }
 
 export function analyzeIdea(title: string, content?: string | null) {
-  return parse<AnalysisOutput>(
+  return parseJson<AnalysisOutput>(
     buildAnalysisPrompt(title, content),
-    AnalysisSchema,
-    "analysis"
+    AnalysisSchema
   );
 }
 
 export function generateMicroTasks(title: string, content?: string | null) {
-  return parse<MicroTasksOutput>(
+  return parseJson<MicroTasksOutput>(
     buildMicroTasksPrompt(title, content),
-    MicroTasksSchema,
-    "micro_tasks"
+    MicroTasksSchema
   );
 }
 
 export function generateActionBoard(title: string, content?: string | null) {
-  return parse<ActionBoardOutput>(
+  return parseJson<ActionBoardOutput>(
     buildActionBoardPrompt(title, content),
-    ActionBoardSchema,
-    "action_board"
+    ActionBoardSchema
   );
 }
