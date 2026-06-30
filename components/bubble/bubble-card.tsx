@@ -29,11 +29,16 @@ export function BubbleCard({ idea, index = 0 }: { idea: Idea; index?: number }) 
       <Link
         href={`/bubble/${idea.id}`}
         className={cn(
-          "group relative flex flex-col gap-3 rounded-2xl border bg-card p-5 shadow-sm ring-2 ring-transparent transition-all hover:-translate-y-0.5 hover:shadow-md",
+          "bubble-crystal group relative flex flex-col gap-3 rounded-[1.75rem] p-5 ring-1 ring-transparent transition-all duration-300 hover:-translate-y-1",
           meta.ring,
           isCold && "opacity-70 saturate-50"
         )}
       >
+        {/* 高光点 */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute right-6 top-4 size-2 rounded-full bg-white/80 blur-[1px]"
+        />
         <div className="flex items-center justify-between gap-2">
           <span
             className={cn(
