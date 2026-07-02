@@ -7,14 +7,26 @@ import {
   buildAnalysisPrompt,
   buildMicroTasksPrompt,
   buildActionBoardPrompt,
+  buildMuseCardsPrompt,
+  buildSkillPrompt,
+  buildJobPrompt,
+  buildIcebreakerPrompt,
 } from "@/lib/ai/prompts";
 import {
   AnalysisSchema,
   MicroTasksSchema,
   ActionBoardSchema,
+  MuseCardsSchema,
+  SkillRecsSchema,
+  JobRecsSchema,
+  IcebreakerSchema,
   type AnalysisOutput,
   type MicroTasksOutput,
   type ActionBoardOutput,
+  type MuseCardsOutput,
+  type SkillRecsOutput,
+  type JobRecsOutput,
+  type IcebreakerOutput,
 } from "@/lib/ai/schemas";
 
 // 默认 deepseek-chat；用 OpenAI 时设为 gpt-4o-mini 等。
@@ -79,5 +91,24 @@ export function generateActionBoard(title: string, content?: string | null) {
   return parseJson<ActionBoardOutput>(
     buildActionBoardPrompt(title, content),
     ActionBoardSchema
+  );
+}
+
+export function generateMuseCards(input: string) {
+  return parseJson<MuseCardsOutput>(buildMuseCardsPrompt(input), MuseCardsSchema);
+}
+
+export function generateSkillRecs(skill: string, level: number) {
+  return parseJson<SkillRecsOutput>(buildSkillPrompt(skill, level), SkillRecsSchema);
+}
+
+export function generateJobRecs(skills: string, passion: string) {
+  return parseJson<JobRecsOutput>(buildJobPrompt(skills, passion), JobRecsSchema);
+}
+
+export function generateIcebreaker(ideaA: string, ideaB: string) {
+  return parseJson<IcebreakerOutput>(
+    buildIcebreakerPrompt(ideaA, ideaB),
+    IcebreakerSchema
   );
 }

@@ -214,6 +214,51 @@
     color: transparent;
   }
 
+  /* 高级灰白·艺术展览底（工作台） */
+  .bg-gallery {
+    background:
+      radial-gradient(70% 50% at 15% 0%, oklch(0.97 0.012 280) 0%, transparent 55%),
+      radial-gradient(60% 45% at 90% 10%, oklch(0.965 0.015 220) 0%, transparent 50%),
+      radial-gradient(80% 60% at 50% 110%, oklch(0.955 0.012 300) 0%, transparent 55%),
+      linear-gradient(180deg, oklch(0.985 0.004 270), oklch(0.965 0.006 270));
+  }
+
+  /* 输入框聚焦发光 */
+  .input-glow {
+    transition: box-shadow 0.35s ease, border-color 0.35s ease;
+  }
+  .input-glow:focus-within {
+    border-color: color-mix(in oklch, oklch(0.65 0.14 280) 60%, white);
+    box-shadow:
+      0 0 0 3px color-mix(in oklch, oklch(0.65 0.14 280) 18%, transparent),
+      0 0 28px -4px color-mix(in oklch, oklch(0.65 0.14 280) 35%, transparent),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  }
+
+  /* 按钮悬停发光 */
+  .btn-glow {
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+  .btn-glow:hover {
+    box-shadow:
+      0 0 24px -2px color-mix(in oklch, oklch(0.6 0.15 285) 55%, transparent),
+      0 8px 28px -8px color-mix(in oklch, oklch(0.55 0.12 285) 45%, transparent);
+  }
+
+  /* 卡片悬停：上浮 + 阴影 + 边框光 */
+  .card-lift {
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.35s ease, border-color 0.35s ease;
+  }
+  .card-lift:hover {
+    transform: translateY(-6px);
+    border-color: color-mix(in oklch, oklch(0.7 0.12 280) 55%, white);
+    box-shadow:
+      0 0 0 1px color-mix(in oklch, oklch(0.7 0.12 280) 25%, transparent),
+      0 0 32px -6px color-mix(in oklch, oklch(0.65 0.13 280) 30%, transparent),
+      0 24px 48px -20px color-mix(in oklch, oklch(0.4 0.08 280) 35%, transparent);
+  }
+
   .animate-float {
     animation: muse-float 7s ease-in-out infinite;
   }
