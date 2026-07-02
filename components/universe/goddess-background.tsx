@@ -10,10 +10,13 @@ import { motion } from "framer-motion";
 export function GoddessBackground({
   src,
   dim = 0,
+  translucency = 0.6,
 }: {
   src: string;
   /** 顶层压暗程度 0-1，供文字可读性 */
   dim?: number;
+  /** 人物半透明程度：石像的不透明度（multiply 融合后白底消隐） */
+  translucency?: number;
 }) {
   return (
     <div aria-hidden className="fixed inset-0 -z-10 overflow-hidden">
@@ -25,13 +28,14 @@ export function GoddessBackground({
         alt=""
         draggable={false}
         initial={{ opacity: 0, scale: 1.04 }}
-        animate={{ opacity: 1, scale: 1 }}
+        animate={{ opacity: translucency, scale: 1 }}
         transition={{ duration: 2, ease: "easeOut" }}
         style={{
           width: "100vw",
           height: "100svh",
           objectFit: "cover",
           objectPosition: "center",
+          mixBlendMode: "multiply",
         }}
         className="select-none"
         onError={(e) => {

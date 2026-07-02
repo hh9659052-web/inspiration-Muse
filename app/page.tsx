@@ -100,9 +100,9 @@ export default function EntryPage() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25, duration: 1.1, ease: "easeOut" }}
-              className="whitespace-nowrap text-center font-sans text-[17vw] font-bold leading-none tracking-tight text-white/60 mix-blend-overlay drop-shadow-[0_2px_24px_rgba(120,110,220,0.25)]"
+              className="text-liquid whitespace-nowrap text-center text-[17vw] font-semibold leading-none tracking-tight"
             >
-              MUSE<span className="text-white/80">.</span>
+              muse.
             </motion.h1>
             <motion.p
               initial={{ opacity: 0 }}

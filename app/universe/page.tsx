@@ -95,9 +95,9 @@ export default function UniversePage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6, duration: 1.2 }}
-          className="whitespace-nowrap text-center font-sans text-[13vw] font-bold leading-none tracking-tight text-white/50 mix-blend-overlay"
+          className="text-liquid whitespace-nowrap text-center text-[13vw] font-semibold leading-none tracking-tight"
         >
-          UNIVERSE<span className="text-white/70">.</span>
+          universe.
         </motion.p>
       </div>
       <motion.span

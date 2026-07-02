@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Noto_Serif_SC, Noto_Sans_SC } from "next/font/google";
+import {
+  Cormorant_Garamond,
+  Noto_Serif_SC,
+  Noto_Sans_SC,
+  Fredoka,
+} from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
@@ -18,6 +23,14 @@ const notoSerifSC = Noto_Serif_SC({
   variable: "--font-serif-cjk",
   display: "swap",
   preload: false,
+});
+
+// 圆润液态展示字（巨型标题，参考水滴玻璃字）
+const fredoka = Fredoka({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-liquid",
+  display: "swap",
 });
 
 // 正文无衬线（中文）
@@ -41,7 +54,7 @@ export default function RootLayout({
     <html
       lang="zh-CN"
       suppressHydrationWarning
-      className={`${cormorant.variable} ${notoSerifSC.variable} ${notoSansSC.variable}`}
+      className={`${cormorant.variable} ${notoSerifSC.variable} ${notoSansSC.variable} ${fredoka.variable}`}
     >
       <body className="min-h-screen antialiased">
         {children}
