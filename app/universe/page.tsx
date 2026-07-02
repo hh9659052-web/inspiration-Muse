@@ -89,6 +89,26 @@ export default function UniversePage() {
         </div>
       </header>
 
+      {/* 编辑杂志感：巨型刊名叠压（在泡泡之下、女神之上） */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-[4svh] z-0 select-none">
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6, duration: 1.2 }}
+          className="whitespace-nowrap text-center font-sans text-[13vw] font-bold leading-none tracking-tight text-white/50 mix-blend-overlay"
+        >
+          UNIVERSE<span className="text-white/70">.</span>
+        </motion.p>
+      </div>
+      <motion.span
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.4, duration: 1 }}
+        className="absolute left-4 top-1/2 z-10 -translate-y-1/2 text-[10px] tracking-[0.5em] text-foreground/35 [writing-mode:vertical-rl] sm:left-8"
+      >
+        SIX&nbsp;BUBBLES&nbsp;·&nbsp;ONE&nbsp;GODDESS
+      </motion.span>
+
       {/* 场景一：女神手上悬浮最大的 Idea Bubble */}
       <AnimatePresence>
         {scene === "seed" && (
